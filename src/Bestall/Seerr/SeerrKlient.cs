@@ -52,18 +52,18 @@ namespace Bestall.Seerr
         }
 
         public Task<DiscoverSida> PopularaAsync(int sida, CancellationToken ct)
-            => HamtaAsync<DiscoverSida>($"/api/v1/discover/movies?page={sida}&language={Sprak}", ct);
+            => HamtaAsync<DiscoverSida>($"/api/v1/discover/movies?page={sida}", ct);
 
         public Task<DiscoverSida> TrendandeAsync(int sida, CancellationToken ct)
-            => HamtaAsync<DiscoverSida>($"/api/v1/discover/trending?page={sida}&language={Sprak}", ct);
+            => HamtaAsync<DiscoverSida>($"/api/v1/discover/trending?page={sida}", ct);
 
         public Task<DiscoverSida> KommandeAsync(int sida, CancellationToken ct)
-            => HamtaAsync<DiscoverSida>($"/api/v1/discover/movies/upcoming?page={sida}&language={Sprak}", ct);
+            => HamtaAsync<DiscoverSida>($"/api/v1/discover/movies/upcoming?page={sida}", ct);
 
         /// <summary>Filmer sorterade på popularitet, med minst angivet antal röster. Grunden för det stora urvalet.</summary>
         public Task<DiscoverSida> UrvalAsync(int sida, int minAntalRoster, CancellationToken ct)
             => HamtaAsync<DiscoverSida>(
-                $"/api/v1/discover/movies?page={sida}&sortBy=popularity.desc&voteCountGte={minAntalRoster}&language={Sprak}", ct);
+                $"/api/v1/discover/movies?page={sida}&sortBy=popularity.desc&voteCountGte={minAntalRoster}", ct);
 
         public Task<FilmDetaljer> FilmAsync(int tmdbId, CancellationToken ct)
             => HamtaAsync<FilmDetaljer>($"/api/v1/movie/{tmdbId}?language={Sprak}", ct);
