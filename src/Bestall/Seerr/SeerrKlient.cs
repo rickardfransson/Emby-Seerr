@@ -88,6 +88,14 @@ namespace Bestall.Seerr
             return sida.Results;
         }
 
+        /// <summary>De senast ändrade beställningarna vars film finns i biblioteket, för alla användare.</summary>
+        public async Task<List<SeerrBestallning>> TillgangligaBestallningarAsync(CancellationToken ct)
+        {
+            var sida = await HamtaAsync<BestallningsSida>(
+                "/api/v1/request?take=100&skip=0&filter=available&sort=modified", ct).ConfigureAwait(false);
+            return sida.Results;
+        }
+
         public async Task<Bestallningsresultat> BestallFilmAsync(int tmdbId, int seerrAnvandarId, CancellationToken ct)
         {
             var kropp = JsonSerializer.Serialize(new { mediaType = "movie", mediaId = tmdbId, userId = seerrAnvandarId });

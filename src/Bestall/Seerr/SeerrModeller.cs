@@ -114,6 +114,7 @@ namespace Bestall.Seerr
         [JsonPropertyName("type")] public string Type { get; set; }
         [JsonPropertyName("updatedAt")] public DateTime UpdatedAt { get; set; }
         [JsonPropertyName("media")] public MediaInfo Media { get; set; }
+        [JsonPropertyName("requestedBy")] public SeerrAnvandare RequestedBy { get; set; }
     }
 
     public enum Bestallningsresultat

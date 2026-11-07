@@ -1,4 +1,4 @@
-<div data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button" data-controller="__plugin/bestalljs">
+<div data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-checkbox" data-controller="__plugin/bestalljs">
     <div data-role="content">
         <div class="content-primary">
             <form class="bestallForm">
@@ -40,6 +40,24 @@
                 <h3>Beställningskanal</h3>
                 <div class="inputContainer">
                     <input is="emby-input" type="number" id="FilmerPerForslagslista" label="Filmer per förslagslista" min="1" max="100" />
+                </div>
+
+                <h3>Notis när filmen har kommit</h3>
+                <p>Visas i Emby-appen för den som beställde filmen, direkt om appen är öppen, annars nästa gång appen öppnas. Skriv {titel} och {år} där filmens titel och år ska stå.</p>
+                <div class="checkboxContainer">
+                    <label>
+                        <input is="emby-checkbox" type="checkbox" id="NotisAktiv" />
+                        <span>Visa notis när en beställd film har kommit</span>
+                    </label>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="NotisRubrik" label="Rubrik" />
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="NotisText" label="Text" />
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="NotisSekunder" label="Visas i (sekunder)" min="3" max="120" />
                 </div>
 
                 <h3>Språk och åldersgräns</h3>

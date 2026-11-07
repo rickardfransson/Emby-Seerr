@@ -2,8 +2,9 @@ define(['baseView', 'loading', 'emby-input', 'emby-button'], function (BaseView,
     'use strict';
 
     var pluginId = 'a3c5e0d2-7b41-4c8e-9f16-5d2b8e4a7c90';
-    var textfalt = ['SeerrAdress', 'SeerrApiNyckel', 'PlatshallarMapp', 'EmbyAdress', 'Sprak', 'AldersgransLander'];
-    var talfalt = ['MinAntalRoster', 'MaxAntalPlatshallare', 'FilmerPerForslagslista'];
+    var textfalt = ['SeerrAdress', 'SeerrApiNyckel', 'PlatshallarMapp', 'EmbyAdress', 'Sprak', 'AldersgransLander', 'NotisRubrik', 'NotisText'];
+    var talfalt = ['MinAntalRoster', 'MaxAntalPlatshallare', 'FilmerPerForslagslista', 'NotisSekunder'];
+    var kryssfalt = ['NotisAktiv'];
     var decimalfalt = ['MinBetyg'];
 
     function View(view, params) {
@@ -16,6 +17,7 @@ define(['baseView', 'loading', 'emby-input', 'emby-button'], function (BaseView,
                 textfalt.forEach(function (f) { config[f] = view.querySelector('#' + f).value.trim(); });
                 talfalt.forEach(function (f) { config[f] = parseInt(view.querySelector('#' + f).value, 10) || 0; });
                 decimalfalt.forEach(function (f) { config[f] = parseFloat(view.querySelector('#' + f).value.replace(',', '.')) || 0; });
+                kryssfalt.forEach(function (f) { config[f] = view.querySelector('#' + f).checked; });
                 return ApiClient.updatePluginConfiguration(pluginId, config);
             }).then(function (result) {
                 Dashboard.processPluginConfigurationUpdateResult(result);
@@ -34,6 +36,7 @@ define(['baseView', 'loading', 'emby-input', 'emby-button'], function (BaseView,
             textfalt.concat(talfalt, decimalfalt).forEach(function (f) {
                 view.querySelector('#' + f).value = config[f] == null ? '' : config[f];
             });
+            kryssfalt.forEach(function (f) { view.querySelector('#' + f).checked = config[f] !== false; });
             loading.hide();
         });
     };

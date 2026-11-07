@@ -31,6 +31,18 @@ namespace Bestall.Configuration
         /// <summary>Språk för titlar och handling.</summary>
         public string Sprak { get; set; } = "sv";
 
+        /// <summary>Visa en notis i Emby-appen när en tittares beställda film har kommit.</summary>
+        public bool NotisAktiv { get; set; } = true;
+
+        /// <summary>Notisens rubrik. {titel} och {år} fylls i.</summary>
+        public string NotisRubrik { get; set; } = Bestall.Domain.Notistext.StandardRubrik;
+
+        /// <summary>Notisens text. {titel} och {år} fylls i.</summary>
+        public string NotisText { get; set; } = Bestall.Domain.Notistext.StandardText;
+
+        /// <summary>Hur länge notisen visas, i sekunder.</summary>
+        public int NotisSekunder { get; set; } = 15;
+
         /// <summary>Länder att hämta åldersgräns från, i prioritetsordning. Embys föräldrakontroll förstår US bäst.</summary>
         public string AldersgransLander { get; set; } = "US,SE";
     }
