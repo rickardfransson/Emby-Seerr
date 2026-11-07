@@ -55,6 +55,7 @@ namespace Bestall.Platshallare
                 return false;
             }
 
+            _log.Info("Platshållarsynk startar i {0}", k.PlatshallarMapp);
             Directory.CreateDirectory(k.PlatshallarMapp);
             foreach (var rest in Directory.EnumerateDirectories(k.PlatshallarMapp, ".skapas-*"))
                 TaBort(rest);
@@ -109,15 +110,31 @@ namespace Bestall.Platshallare
             foreach (Forslagslista lista in Enum.GetValues(typeof(Forslagslista)))
                 foreach (var f in await _forslag.HamtaAsync(lista, ct).ConfigureAwait(false))
                     urval[f.Id] = f;
+            var franListor = urval.Count;
 
-            for (var sida = 1; sida <= MaxSidor && urval.Count < max; sida++)
+            int sida = 0, totaltSidor = 0, traffar = 0;
+            string stopp = "taket nått";
+            while (urval.Count < max)
             {
+                sida++;
+                if (sida > MaxSidor) { stopp = $"max {MaxSidor} sidor"; break; }
+
                 var svar = await _seerr.UrvalAsync(sida, Math.Max(0, k.MinAntalRoster), ct).ConfigureAwait(false);
+                totaltSidor = svar.TotalPages;
+                traffar += svar.Results.Count;
                 foreach (var f in svar.Results.Where(Forslagscache.ArVisbar))
                     if (urval.Count < max && !urval.ContainsKey(f.Id)) urval[f.Id] = f;
-                if (sida >= svar.TotalPages || svar.Results.Count == 0) break;
+
+                if (sida == 1)
+                    _log.Info("Urval sida 1: {0} filmer, {1} beställningsbara, Seerr anger {2} sidor totalt.",
+                        svar.Results.Count, svar.Results.Count(Forslagscache.ArVisbar), svar.TotalPages);
+
+                if (svar.Results.Count == 0) { stopp = $"tom sida {sida}"; break; }
+                if (svar.TotalPages > 0 && sida >= svar.TotalPages) { stopp = $"sista sidan ({svar.TotalPages})"; break; }
             }
 
+            _log.Info("Urval: {0} från förslagslistor, {1} totalt efter {2} sidor ({3} filmer från Seerr). Stoppade: {4}. Tak {5}, minst {6} röster.",
+                franListor, urval.Count, sida, traffar, stopp, max, k.MinAntalRoster);
             return urval;
         }
 

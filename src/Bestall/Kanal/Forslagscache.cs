@@ -52,7 +52,7 @@ namespace Bestall.Kanal
                 var svar = await HamtaSidaAsync(lista, sida, ct).ConfigureAwait(false);
                 foreach (var f in svar.Results.Where(ArVisbar))
                     if (sedda.Add(f.Id) && filmer.Count < antal) filmer.Add(f);
-                if (sida >= svar.TotalPages) break;
+                if (svar.Results.Count == 0 || (svar.TotalPages > 0 && sida >= svar.TotalPages)) break;
             }
 
             _listor[lista] = (DateTime.UtcNow, filmer);
