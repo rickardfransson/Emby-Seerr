@@ -50,6 +50,14 @@ dotnet test tests/Bestall.Tests
 | Språk | sv | Språk för titlar och handling |
 | Länder för åldersgräns | US,SE | Embys föräldrakontroll förstår US-gränser bäst |
 
+## Notis när filmen har kommit
+
+När en tittares beställda film blivit tillgänglig visas en notis i Emby-appen, direkt om appen är öppen, annars nästa gång någon av tittarens appar ansluter (inom 14 dagar). Pluginet frågar Seerr var femte minut.
+
+Rubrik, text och visningstid ändras i pluginets inställningar. Skriv `{titel}` och `{år}` där filmens titel och år ska stå. Filmer som redan var tillgängliga när notiserna slogs på får ingen notis.
+
+Notisen syns bara i appar som visar meddelanden från servern; webbklienten gör det, övriga appar behöver provas. Vill du nå tittare även när de inte är i Emby, slå på Seerrs egna aviseringar (e-post, Telegram, Pushover m.fl.).
+
 ## Felsökning
 
 Allt pluginet gör loggas under namnet `Bestall` i Embys logg (Dashboard → Loggar). Sök på "Beställning av tmdb" för att se varje beställning, vem som gjorde den och från vilken app.
