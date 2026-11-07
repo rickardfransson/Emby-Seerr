@@ -20,7 +20,7 @@ namespace Bestall.Kanal
     /// Beställningskanalen: förslagslistor att bläddra i och tittarens egna beställningar.
     /// Att spela en film här gör en beställning (se Bestallning/Bestallningslyssnare).
     /// </summary>
-    public class Bestallningskanal : IChannel, IRequiresMediaInfoCallback
+    public class Bestallningskanal : IChannel, IRequiresMediaInfoCallback, IHasCacheKey
     {
         public const string FilmPrefix = "bestall-film-";
         private const string StatusPrefix = "bestall-status-";
@@ -51,6 +51,17 @@ namespace Bestall.Kanal
         public string HomePageUrl => "";
         public ChannelParentalRating ParentalRating => ChannelParentalRating.GeneralAudience;
 
+        /// <summary>
+        /// Nyckeln för Embys cache av kanalen. Den byter värde per tittare, när Seerr går upp eller ner,
+        /// och var femte minut, så att Mina beställningar inte delas mellan tittare och inte blir inaktuell.
+        /// </summary>
+        public string GetCacheKey(string userId)
+        {
+            var uppe = P.SeerrStatus.ArUppeAsync(CancellationToken.None).GetAwaiter().GetResult();
+            var period = DateTime.UtcNow.Ticks / TimeSpan.FromMinutes(5).Ticks;
+            return $"{userId}-{(uppe ? "uppe" : "nere")}-{period}";
+        }
+
         public InternalChannelFeatures GetChannelFeatures() => new InternalChannelFeatures
         {
             ContentTypes = new List<ChannelMediaContentType> { ChannelMediaContentType.Movie },
@@ -68,7 +79,10 @@ namespace Bestall.Kanal
             try
             {
                 if (!await P.SeerrStatus.ArUppeAsync(ct).ConfigureAwait(false))
+                {
+                    _log.Warn("Beställningskanalen: Seerr svarar inte på {0}; visar 'inte tillgängligt'.", P.Configuration.SeerrAdress);
                     poster = new List<ChannelItemInfo> { Mapp(Otillganglig, "Beställningar är inte tillgängliga just nu") };
+                }
                 else if (string.IsNullOrEmpty(query.FolderId))
                     poster = Rot();
                 else if (query.FolderId == Mina)
