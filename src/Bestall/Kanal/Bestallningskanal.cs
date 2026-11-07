@@ -139,8 +139,6 @@ namespace Bestall.Kanal
             var filmer = await P.Forslag.HamtaAsync(lista.Lista, ct).ConfigureAwait(false);
             return filmer.Select(f =>
             {
-                var ids = new ProviderIdDictionary();
-                ids["Tmdb"] = f.Id.ToString();
                 return new ChannelItemInfo
             {
                 Id = FilmPrefix + f.Id,
@@ -150,7 +148,6 @@ namespace Bestall.Kanal
                 PremiereDate = DateTime.TryParse(f.ReleaseDate, out var d) ? d : (DateTime?)null,
                 CommunityRating = f.VoteAverage.HasValue ? (float)f.VoteAverage.Value : (float?)null,
                 ImageUrl = Poster(f.PosterPath),
-                ProviderIds = ids,
                 Type = ChannelItemType.Media,
                 ContentType = ChannelMediaContentType.Movie,
                 MediaType = ChannelMediaType.Video

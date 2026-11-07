@@ -10,9 +10,19 @@ namespace Bestall.Platshallare
     /// <summary>
     /// Skriver filmens information som NFO, så att Emby läser den lokalt i stället för att hämta den från nätet.
     /// lockdata hindrar Emby från att skriva över titeln med "(beställ)".
+    /// Inget TMDB-id skrivs: Emby kopplar "sedd" till det, och då skulle den riktiga filmen se sedd ut.
     /// </summary>
     public static class NfoSkrivare
     {
+        /// <summary>Tar bort TMDB-id ur en NFO skriven av en äldre version.</summary>
+        public static string UtanTmdbId(string nfo)
+        {
+            var doc = XDocument.Parse(nfo);
+            doc.Descendants("tmdbid").Remove();
+            doc.Descendants("uniqueid").Remove();
+            return doc.Declaration + System.Environment.NewLine + doc.Root;
+        }
+
         public static string Skapa(DiscoverFilm film, FilmDetaljer detaljer, IEnumerable<string> aldersgransLander)
         {
             var titel = detaljer?.Title ?? film.Title;
@@ -24,8 +34,6 @@ namespace Bestall.Platshallare
                 new XElement("originaltitle", detaljer?.OriginalTitle ?? film.OriginalTitle ?? titel),
                 new XElement("year", film.Ar),
                 new XElement("plot", detaljer?.Overview ?? film.Overview ?? ""),
-                new XElement("uniqueid", new XAttribute("type", "tmdb"), new XAttribute("default", "true"), film.Id),
-                new XElement("tmdbid", film.Id),
                 new XElement("lockdata", "true"));
 
             if (DateTime.TryParse(datum, out var d))

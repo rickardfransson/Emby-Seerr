@@ -10,4 +10,5 @@ Varje platshållare är en mapp med en `.strm`, en `.nfo` och ett omslag, skrive
 ## Consequences
 
 - Biblioteket måste ställas in för att läsa NFO och inte hämta från nätet (se README).
+- Platshållarna får avsiktligt inget TMDB-id som Emby kan se, varken i mappnamnet (eget märke `[bestall-…]` i stället för `[tmdbid-…]`) eller i NFO-filen. Emby kopplar "sedd" till TMDB-id, så annars skulle den riktiga filmen se sedd ut när den kommer, eftersom tittaren "spelat" platshållaren. Av samma skäl får biblioteket inte hämta metadata från nätet.
 - Första synken skriver alla platshållare och hämtar tusentals omslag; senare synkar ändrar bara skillnaden.

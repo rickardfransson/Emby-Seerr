@@ -33,7 +33,7 @@ dotnet test tests/Bestall.Tests
 2. **Seerr**: importera de Emby-användare som ska få beställa (Användare → Importera Emby-användare). Bara de blir tittare. Kopiera API-nyckeln från Inställningar → Allmänt.
 3. **Pluginet**: Dashboard → Plugins → Beställ film. Fyll i Seerr-adress, API-nyckel och en tom mapp för platshållare, t.ex. `/media/bestall`.
 4. **Bibliotek**: lägg till platshållarmappen som ett nytt bibliotek av typen Filmer, med namnet "Beställ film". I bibliotekets inställningar:
-   - stäng av alla nedladdare av metadata och bilder från nätet,
+   - stäng av alla nedladdare av metadata och bilder från nätet (viktigt: annars känner Emby igen filmerna och markerar den riktiga filmen som sedd när den kommer),
    - låt NFO vara på som läsare av lokal metadata,
    - låt realtidsövervakning vara på.
 5. **Behörighet**: i Embys användarinställningar, ge bara tittare (användare med Seerr-konto) tillgång till biblioteket "Beställ film". Beställningskanalen döljs automatiskt för andra, men biblioteket måste begränsas för hand.

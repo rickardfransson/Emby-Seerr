@@ -11,24 +11,33 @@ namespace Bestall.Tests
 
         [Fact]
         public void Mappnamn_innehaller_ar_och_tmdb_id()
-            => Assert.Equal("Dune (2021) [tmdbid-438631]", Platshallarnamn.Mappnamn("Dune", 2021, 438631));
+            => Assert.Equal("Dune (2021) [bestall-438631]", Platshallarnamn.Mappnamn("Dune", 2021, 438631));
 
         [Fact]
         public void Mappnamn_rensar_tecken_som_inte_far_finnas_i_filnamn()
-            => Assert.Equal("Mission Impossible - Dead Reckoning (2023) [tmdbid-575264]",
+            => Assert.Equal("Mission Impossible - Dead Reckoning (2023) [bestall-575264]",
                 Platshallarnamn.Mappnamn("Mission: Impossible - Dead Reckoning", 2023, 575264));
 
         [Fact]
         public void Mappnamn_utan_giltiga_tecken_far_reservnamn()
-            => Assert.Equal("Film (2020) [tmdbid-1]", Platshallarnamn.Mappnamn("???", 2020, 1));
+            => Assert.Equal("Film (2020) [bestall-1]", Platshallarnamn.Mappnamn("???", 2020, 1));
 
         [Theory]
+        [InlineData("/media/bestall/Dune (2021) [bestall-438631]/Dune (2021) [bestall-438631].strm", 438631)]
         [InlineData("/media/bestall/Dune (2021) [tmdbid-438631]/Dune (2021) [tmdbid-438631].strm", 438631)]
         [InlineData(@"D:\bestall\Dune (2021) [TMDBID-438631]", 438631)]
         [InlineData("/media/filmer/Dune (2021)/Dune.mkv", null)]
         [InlineData(null, null)]
         public void Tmdb_id_hittas_i_sokvag(string sokvag, int? forvantat)
             => Assert.Equal(forvantat, Platshallarnamn.TmdbIdFranSokvag(sokvag));
+
+        [Fact]
+        public void Kanner_igen_och_bygger_om_gammalt_format()
+        {
+            Assert.True(Platshallarnamn.ArGammaltFormat("Dune (2021) [tmdbid-438631]"));
+            Assert.False(Platshallarnamn.ArGammaltFormat("Dune (2021) [bestall-438631]"));
+            Assert.Equal("Dune (2021) [bestall-438631].nfo", Platshallarnamn.TillNyttFormat("Dune (2021) [tmdbid-438631].nfo"));
+        }
 
         [Theory]
         [InlineData("/media/bestall/Dune/Dune.strm", "/media/bestall", true)]

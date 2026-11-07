@@ -59,6 +59,7 @@ namespace Bestall.Platshallare
             Directory.CreateDirectory(k.PlatshallarMapp);
             foreach (var rest in Directory.EnumerateDirectories(k.PlatshallarMapp, ".skapas-*"))
                 TaBort(rest);
+            var ombyggda = ByggOmGamlaPlatshallare(k.PlatshallarMapp);
 
             var onskade = await HamtaUrvalAsync(k, ct).ConfigureAwait(false);
             framsteg.Report(20);
@@ -90,7 +91,7 @@ namespace Bestall.Platshallare
             _log.Info("Platshållarsynk klar: {0} tillagda, {1} borttagna, {2} totalt.",
                 plan.LaggTill.Count, plan.TaBort.Count, befintliga.Count - plan.TaBort.Count + plan.LaggTill.Count);
             framsteg.Report(100);
-            return plan.LaggTill.Count > 0 || plan.TaBort.Count > 0;
+            return ombyggda > 0 || plan.LaggTill.Count > 0 || plan.TaBort.Count > 0;
         }
 
         /// <summary>Tar bort platshållaren för en film, t.ex. direkt efter att den beställts.</summary>
@@ -136,6 +137,43 @@ namespace Bestall.Platshallare
             _log.Info("Urval: {0} från förslagslistor, {1} totalt efter {2} sidor ({3} filmer från Seerr). Stoppade: {4}. Tak {5}, minst {6} röster, lägst betyg {7}.",
                 franListor, urval.Count, sida, traffar, stopp, max, k.MinAntalRoster, k.MinBetyg);
             return urval;
+        }
+
+        /// <summary>
+        /// Platshållare från äldre versioner har [tmdbid-…] i namnet och TMDB-id i NFO-filen, vilket gör att Emby
+        /// för över "sedd" till den riktiga filmen. Byt till pluginets eget märke och ta bort TMDB-id, utan att
+        /// hämta något på nytt.
+        /// </summary>
+        private int ByggOmGamlaPlatshallare(string rot)
+        {
+            var antal = 0;
+            foreach (var mapp in Directory.EnumerateDirectories(rot).Where(m => Platshallarnamn.ArGammaltFormat(Path.GetFileName(m))).ToList())
+            {
+                try
+                {
+                    foreach (var fil in Directory.EnumerateFiles(mapp).ToList())
+                    {
+                        var nyFil = Path.Combine(mapp, Platshallarnamn.TillNyttFormat(Path.GetFileName(fil)));
+                        if (fil.EndsWith(".nfo", StringComparison.OrdinalIgnoreCase))
+                            File.WriteAllText(fil, NfoSkrivare.UtanTmdbId(File.ReadAllText(fil)), new UTF8Encoding(false));
+                        if (nyFil != fil) File.Move(fil, nyFil);
+                    }
+
+                    var nyMapp = Path.Combine(rot, Platshallarnamn.TillNyttFormat(Path.GetFileName(mapp)));
+                    if (Directory.Exists(nyMapp)) TaBort(mapp);
+                    else Directory.Move(mapp, nyMapp);
+                    antal++;
+                }
+                catch (Exception ex)
+                {
+                    // Går den inte att bygga om, ta bort den; nästa synk skapar den på nytt i rätt format.
+                    _log.Warn("Kunde inte bygga om platshållare {0}: {1}", mapp, ex.Message);
+                    TaBort(mapp);
+                }
+            }
+
+            if (antal > 0) _log.Info("Byggde om {0} platshållare till nytt format (utan TMDB-id).", antal);
+            return antal;
         }
 
         private static Dictionary<int, string> BefintligaMappar(string rot)
