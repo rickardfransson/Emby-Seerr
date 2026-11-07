@@ -43,7 +43,8 @@ dotnet test tests/Bestall.Tests
 
 | Inställning | Standard | Betydelse |
 |---|---|---|
-| Minsta antal röster på TMDB | 300 | Lägre värde ger ett större urval |
+| Minsta antal röster på TMDB | 50 | Hindrar obskyra filmer med få men höga betyg |
+| Lägsta betyg (TMDB) | 5,9 | Högre värde ger ett mindre urval |
 | Högsta antal platshållare | 7 500 | Tak för urvalet (max 10 000) |
 | Filmer per förslagslista | 40 | Antal filmer i varje lista i kanalen |
 | Språk | sv | Språk för titlar och handling |

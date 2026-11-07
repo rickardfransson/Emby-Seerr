@@ -60,10 +60,11 @@ namespace Bestall.Seerr
         public Task<DiscoverSida> KommandeAsync(int sida, CancellationToken ct)
             => HamtaAsync<DiscoverSida>($"/api/v1/discover/movies/upcoming?page={sida}", ct);
 
-        /// <summary>Filmer sorterade på popularitet, med minst angivet antal röster. Grunden för det stora urvalet.</summary>
-        public Task<DiscoverSida> UrvalAsync(int sida, int minAntalRoster, CancellationToken ct)
+        /// <summary>Filmer sorterade på popularitet, med minst angivet antal röster och betyg. Grunden för det stora urvalet.</summary>
+        public Task<DiscoverSida> UrvalAsync(int sida, int minAntalRoster, double minBetyg, CancellationToken ct)
             => HamtaAsync<DiscoverSida>(
-                $"/api/v1/discover/movies?page={sida}&sortBy=popularity.desc&voteCountGte={minAntalRoster}", ct);
+                $"/api/v1/discover/movies?page={sida}&sortBy=popularity.desc&voteCountGte={minAntalRoster}" +
+                $"&voteAverageGte={minBetyg.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)}", ct);
 
         public Task<FilmDetaljer> FilmAsync(int tmdbId, CancellationToken ct)
             => HamtaAsync<FilmDetaljer>($"/api/v1/movie/{tmdbId}?language={Sprak}", ct);

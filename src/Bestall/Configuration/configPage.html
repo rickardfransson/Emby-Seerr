@@ -26,7 +26,11 @@
                 </div>
                 <div class="inputContainer">
                     <input is="emby-input" type="number" id="MinAntalRoster" label="Minsta antal röster på TMDB" min="0" />
-                    <div class="fieldDescription">Lägre värde ger ett större urval. 300 ger ungefär 7 000–9 000 filmer.</div>
+                    <div class="fieldDescription">Hindrar obskyra filmer med få men höga betyg. Lägre värde ger ett större urval.</div>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="MinBetyg" label="Lägsta betyg (TMDB, 0–10)" min="0" max="10" step="0.1" />
+                    <div class="fieldDescription">TMDB:s betyg ligger oftast nära IMDb:s. Högre värde ger ett mindre urval.</div>
                 </div>
                 <div class="inputContainer">
                     <input is="emby-input" type="number" id="MaxAntalPlatshallare" label="Högsta antal platshållare" min="0" max="10000" />

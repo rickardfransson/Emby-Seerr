@@ -119,7 +119,7 @@ namespace Bestall.Platshallare
                 sida++;
                 if (sida > MaxSidor) { stopp = $"max {MaxSidor} sidor"; break; }
 
-                var svar = await _seerr.UrvalAsync(sida, Math.Max(0, k.MinAntalRoster), ct).ConfigureAwait(false);
+                var svar = await _seerr.UrvalAsync(sida, Math.Max(0, k.MinAntalRoster), Math.Max(0, Math.Min(10, k.MinBetyg)), ct).ConfigureAwait(false);
                 totaltSidor = svar.TotalPages;
                 traffar += svar.Results.Count;
                 foreach (var f in svar.Results.Where(Forslagscache.ArVisbar))
@@ -133,8 +133,8 @@ namespace Bestall.Platshallare
                 if (svar.TotalPages > 0 && sida >= svar.TotalPages) { stopp = $"sista sidan ({svar.TotalPages})"; break; }
             }
 
-            _log.Info("Urval: {0} från förslagslistor, {1} totalt efter {2} sidor ({3} filmer från Seerr). Stoppade: {4}. Tak {5}, minst {6} röster.",
-                franListor, urval.Count, sida, traffar, stopp, max, k.MinAntalRoster);
+            _log.Info("Urval: {0} från förslagslistor, {1} totalt efter {2} sidor ({3} filmer från Seerr). Stoppade: {4}. Tak {5}, minst {6} röster, lägst betyg {7}.",
+                franListor, urval.Count, sida, traffar, stopp, max, k.MinAntalRoster, k.MinBetyg);
             return urval;
         }
 

@@ -17,7 +17,10 @@ namespace Bestall.Configuration
         public string EmbyAdress { get; set; } = "http://127.0.0.1:8096";
 
         /// <summary>Hur många röster en film minst ska ha på TMDB för att komma med i urvalet.</summary>
-        public int MinAntalRoster { get; set; } = 300;
+        public int MinAntalRoster { get; set; } = 50;
+
+        /// <summary>Lägsta TMDB-betyg (0–10) för att en film ska komma med i urvalet.</summary>
+        public double MinBetyg { get; set; } = 5.9;
 
         /// <summary>Tak för antalet platshållare.</summary>
         public int MaxAntalPlatshallare { get; set; } = 7500;
