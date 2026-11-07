@@ -1,0 +1,41 @@
+name: Bygg
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bygg:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Tester
+        run: dotnet test tests/Bestall.Tests -c Release
+
+      - name: Bygg pluginet
+        run: dotnet build src/Bestall/Bestall.csproj -c Release
+
+      - name: Ladda upp Bestall.dll
+        uses: actions/upload-artifact@v4
+        with:
+          name: Bestall
+          path: src/Bestall/bin/Release/netstandard2.0/Bestall.dll
+          if-no-files-found: error
+
+      - name: Skapa release (vid tagg v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: src/Bestall/bin/Release/netstandard2.0/Bestall.dll
+          generate_release_notes: true

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>Bestall</AssemblyName>
+    <RootNamespace>Bestall</RootNamespace>
+    <Version>1.0.0</Version>
+    <Nullable>disable</Nullable>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Ska matcha din Emby-servers version (Dashboard → Om). -->
+    <PackageReference Include="mediabrowser.server.core" Version="4.8.*" />
+
+    <!-- Finns redan i Embys körmiljö; används bara vid kompilering och följer inte med pluginet. -->
+    <PackageReference Include="System.Text.Json" Version="6.0.*" PrivateAssets="all" ExcludeAssets="runtime" />
+    <PackageReference Include="SkiaSharp" Version="2.88.*" PrivateAssets="all" ExcludeAssets="runtime;native" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Media\bestalld.mp4" LogicalName="Bestall.Media.bestalld.mp4" />
+    <EmbeddedResource Include="Media\ej-tillganglig.mp4" LogicalName="Bestall.Media.ej-tillganglig.mp4" />
+    <EmbeddedResource Include="Configuration\configPage.html" LogicalName="Bestall.Configuration.configPage.html" />
+    <EmbeddedResource Include="Configuration\configPage.js" LogicalName="Bestall.Configuration.configPage.js" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,55 @@
+<div data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button" data-controller="__plugin/bestalljs">
+    <div data-role="content">
+        <div class="content-primary">
+            <form class="bestallForm">
+                <h2>Beställ film</h2>
+                <p>Tittare beställer filmer från TV-apparna via Seerr. Bara Emby-användare som har ett konto i Seerr kan beställa.</p>
+
+                <h3>Seerr</h3>
+                <div class="inputContainer">
+                    <input is="emby-input" type="url" id="SeerrAdress" label="Seerr-adress" required />
+                    <div class="fieldDescription">Sedd från Emby-servern, t.ex. http://192.168.1.10:5055</div>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="password" id="SeerrApiNyckel" label="API-nyckel" required />
+                    <div class="fieldDescription">Finns i Seerr under Inställningar → Allmänt.</div>
+                </div>
+
+                <h3>Platshållare</h3>
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="PlatshallarMapp" label="Mapp för platshållare" required />
+                    <div class="fieldDescription">En tom mapp som bara används av pluginet. Lägg till den som ett eget filmbibliotek i Emby.</div>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="url" id="EmbyAdress" label="Embys adress (sedd från servern själv)" required />
+                    <div class="fieldDescription">Oftast http://127.0.0.1:8096</div>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="MinAntalRoster" label="Minsta antal röster på TMDB" min="0" />
+                    <div class="fieldDescription">Lägre värde ger ett större urval. 300 ger ungefär 7 000–9 000 filmer.</div>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="MaxAntalPlatshallare" label="Högsta antal platshållare" min="0" max="10000" />
+                    <div class="fieldDescription">Tak för urvalet. Seerr kan som mest lämna 10 000 filmer per lista.</div>
+                </div>
+
+                <h3>Beställningskanal</h3>
+                <div class="inputContainer">
+                    <input is="emby-input" type="number" id="FilmerPerForslagslista" label="Filmer per förslagslista" min="1" max="100" />
+                </div>
+
+                <h3>Språk och åldersgräns</h3>
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="Sprak" label="Språk för titlar och handling" />
+                    <div class="fieldDescription">Språkkod, t.ex. sv eller en.</div>
+                </div>
+                <div class="inputContainer">
+                    <input is="emby-input" type="text" id="AldersgransLander" label="Länder för åldersgräns" />
+                    <div class="fieldDescription">I prioritetsordning, kommaseparerat, t.ex. US,SE.</div>
+                </div>
+
+                <button is="emby-button" type="submit" class="raised button-submit block"><span>Spara</span></button>
+            </form>
+        </div>
+    </div>
+</div>
