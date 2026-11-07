@@ -53,12 +53,12 @@ namespace Bestall.Kanal
 
         /// <summary>
         /// Nyckeln för Embys cache av kanalen. Den byter värde per tittare, när Seerr går upp eller ner,
-        /// och var femte minut, så att Mina beställningar inte delas mellan tittare och inte blir inaktuell.
+        /// och varannan minut, så att nedladdningsstatus hänger med och Mina beställningar inte delas mellan tittare och inte blir inaktuell.
         /// </summary>
         public string GetCacheKey(string userId)
         {
             var uppe = P.SeerrStatus.ArUppeAsync(CancellationToken.None).GetAwaiter().GetResult();
-            var period = DateTime.UtcNow.Ticks / TimeSpan.FromMinutes(5).Ticks;
+            var period = DateTime.UtcNow.Ticks / TimeSpan.FromMinutes(2).Ticks;
             return $"{userId}-{(uppe ? "uppe" : "nere")}-{period}";
         }
 
@@ -174,6 +174,14 @@ namespace Bestall.Kanal
             {
                 var status = Bestallningsregler.Statustext(b.Status, b.Media.Status, b.UpdatedAt.ToUniversalTime(), nu);
                 if (status == null) continue;
+
+                var nedladdning = b.Media.DownloadStatus?.FirstOrDefault(d => d.Size > 0);
+                if (nedladdning != null)
+                {
+                    var forlopp = Nedladdningsstatus.Text(nedladdning.Size, nedladdning.SizeLeft,
+                        nedladdning.EstimatedCompletionTime?.ToUniversalTime(), nu);
+                    if (forlopp != null) status = $"Laddas ner, {forlopp}";
+                }
 
                 var tmdb = b.Media.TmdbId.Value;
                 FilmDetaljer film = null;

@@ -36,6 +36,16 @@ namespace Bestall.Seerr
         [JsonPropertyName("tmdbId")] public int? TmdbId { get; set; }
         [JsonPropertyName("status")] public int? Status { get; set; }
         [JsonPropertyName("mediaType")] public string MediaType { get; set; }
+
+        /// <summary>Pågående nedladdningar som Seerr hämtat från Radarr.</summary>
+        [JsonPropertyName("downloadStatus")] public List<Nedladdning> DownloadStatus { get; set; } = new List<Nedladdning>();
+    }
+
+    public sealed class Nedladdning
+    {
+        [JsonPropertyName("size")] public long Size { get; set; }
+        [JsonPropertyName("sizeLeft")] public long SizeLeft { get; set; }
+        [JsonPropertyName("estimatedCompletionTime")] public DateTime? EstimatedCompletionTime { get; set; }
     }
 
     public sealed class FilmDetaljer
