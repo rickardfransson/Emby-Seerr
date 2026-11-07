@@ -106,7 +106,7 @@ namespace Bestall.Kanal
         }
 
         public Task<DynamicImageResponse> GetChannelImage(ImageType type, CancellationToken ct)
-            => Task.FromResult(new DynamicImageResponse { HasImage = false });
+            => Task.FromResult(new DynamicImageResponse());
 
         public IEnumerable<ImageType> GetSupportedChannelImages() => Array.Empty<ImageType>();
 
@@ -123,7 +123,11 @@ namespace Bestall.Kanal
             if (lista.Id == null) return new List<ChannelItemInfo>();
 
             var filmer = await P.Forslag.HamtaAsync(lista.Lista, ct).ConfigureAwait(false);
-            return filmer.Select(f => new ChannelItemInfo
+            return filmer.Select(f =>
+            {
+                var ids = new ProviderIdDictionary();
+                ids["Tmdb"] = f.Id.ToString();
+                return new ChannelItemInfo
             {
                 Id = FilmPrefix + f.Id,
                 Name = f.Title,
@@ -132,10 +136,11 @@ namespace Bestall.Kanal
                 PremiereDate = DateTime.TryParse(f.ReleaseDate, out var d) ? d : (DateTime?)null,
                 CommunityRating = f.VoteAverage.HasValue ? (float)f.VoteAverage.Value : (float?)null,
                 ImageUrl = Poster(f.PosterPath),
-                ProviderIds = new Dictionary<string, string> { { "Tmdb", f.Id.ToString() } },
+                ProviderIds = ids,
                 Type = ChannelItemType.Media,
                 ContentType = ChannelMediaContentType.Movie,
                 MediaType = ChannelMediaType.Video
+            };
             }).ToList();
         }
 
