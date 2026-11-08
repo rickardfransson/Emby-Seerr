@@ -40,6 +40,12 @@ namespace Bestall
             EjTillgangligVideo = PackaUpp("Bestall.Media.ej-tillganglig.mp4", Path.Combine(mapp, "ej-tillganglig.mp4"));
         }
 
+        /// <summary>
+        /// Fast namn på inställningsfilen. Annars döper Emby den efter dll-filen, och eftersom den nu har
+        /// versionsnummer i namnet (Emby-Seerr-1.0.12.dll) skulle inställningarna försvinna vid varje uppdatering.
+        /// </summary>
+        public override string ConfigurationFileName => "Emby-Seerr.xml";
+
         public override string Name => "Beställ film";
         public override string Description => "Låter tittare beställa filmer via Seerr direkt från Embys TV-appar.";
         public override Guid Id => new Guid("a3c5e0d2-7b41-4c8e-9f16-5d2b8e4a7c90");
