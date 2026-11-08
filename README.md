@@ -16,7 +16,9 @@ Begrepp finns i [CONTEXT.md](CONTEXT.md) och viktiga beslut i [docs/adr](docs/ad
 
 ## Hämta färdigbyggt plugin
 
-GitHub bygger pluginet automatiskt vid varje uppladdning. Öppna fliken **Actions**, välj senaste körningen av "Bygg" och ladda ner `Emby-Seerr` under Artifacts (en zip med `Emby-Seerr.dll`). Taggar som börjar på `v` (t.ex. `v1.0.0`) skapar också en release med `Emby-Seerr.dll` bifogad.
+GitHub bygger pluginet automatiskt vid varje uppladdning, och varje bygge får ett eget versionsnummer, t.ex. `Emby-Seerr-1.0.14.dll`. Öppna fliken **Actions**, välj senaste körningen av "Bygg" och ladda ner filen under Artifacts. Versionen syns också under Plugins i Emby. Taggar som börjar på `v` (t.ex. `v1.0.0`) skapar också en release med filen bifogad.
+
+**Ta alltid bort den gamla dll-filen** ur Embys `plugins`-mapp innan du lägger in en ny. Filerna har olika namn, så den gamla skrivs inte över, och ligger båda kvar laddar Emby pluginet två gånger.
 
 ## Bygga själv
 
@@ -29,7 +31,7 @@ dotnet test tests/Bestall.Tests
 
 ## Installera
 
-1. Kopiera `src/Bestall/bin/Release/netstandard2.0/Emby-Seerr.dll` till Embys `plugins`-mapp och starta om Emby.
+1. Lägg `Emby-Seerr-<version>.dll` i Embys `plugins`-mapp (ta bort eventuell äldre Emby-Seerr-fil) och starta om Emby.
 2. **Seerr**: importera de Emby-användare som ska få beställa (Användare → Importera Emby-användare). Bara de blir tittare. Kopiera API-nyckeln från Inställningar → Allmänt.
 3. **Pluginet**: Dashboard → Plugins → Beställ film. Fyll i Seerr-adress, API-nyckel och en tom mapp för platshållare, t.ex. `/media/bestall`.
 4. **Bibliotek**: lägg till platshållarmappen som ett nytt bibliotek av typen Filmer, med namnet "Beställ film". I bibliotekets inställningar:
